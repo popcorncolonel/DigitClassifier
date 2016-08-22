@@ -21,9 +21,3 @@ def display_img(arr: np.array):
     arr = arr.reshape((28, 28))
     plt.imshow(arr, cmap='Greys_r')
     plt.show()
-
-
-data = get_data(7)
-display_img(data[0])
-display_img(data[1])
-display_img(data[-1])
