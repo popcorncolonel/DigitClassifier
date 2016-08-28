@@ -1,52 +1,36 @@
 import numpy as np
+import random
+import theano
 
-from get_data import display_img
 from get_data import get_data
-
-data = [get_data(n) for n in range(10)]
-
-# 70% training, 30% testing.
-training = [d[:700] for d in data]
-test = [d[700:] for d in data]
+from get_data import display_img
+from get_data import get_xy
+from log_reg import LogisticRegression
 
 
-class Classifier(object):
-    def __init__(self, training, test):
-        self.training = training
-        self.test = test
-        self.train()
+def main():
+    data = []
+    for i in range(10):
+        data.extend([(d, i) for d in get_data(i)])
+    random.shuffle(data)
 
-    def predict(self, img):
-        """
-        forward pass through the network
-        :param img: 28*28 dimensional np array representing an image
-        :return: 0-9
-        """
-        I = np.identity(10)
-        prediction = self.forward_pass(img)
-        dists = [np.linalg.norm(vect - prediction) for vect in I]
-        return np.argmin(dists)
+    training = data[:800]
+    test = data[800:900]
+    validation = data[900:]
 
-    def forward_pass(self, img):
-        """
-        some matrix mult or smthng.
-        :param img: 28*28 dimensional np array representing an image
-        :return: vector - [1 0 ... 0 0] through [0 0 ... 0 1]
-        """
-        pass
+    train_x, train_y = get_xy(training)
+    test_x, test_y = get_xy(test)
+    valid_x, valid_y = get_xy(validation)
 
-    def train(self):
-        pass
+    classifier = LogisticRegression(n_in=28*28, n_out=10)
+    classifier.train(train_x, train_y, test_x, test_y, valid_x, valid_y)
 
-    def accuracy(self):
-        n_correct = 0.0
-        total = 0.0
-        for label in range(10):
-            total += len(self.test[label])
-            for img in self.test[label]:
-                if self.predict(img) == label:
-                    n_correct += 1
-        return n_correct / total
+    for img, label in random.sample(data, 20):
+        img = np.asarray(img, dtype=theano.config.floatX)
+        pred_label = classifier.pred_label(img)
+        print("Guessed: {}; Actually: {}".format(pred_label, label))
+        display_img(img)
 
 
-c = Classifier(training, test)
+if __name__ == '__main__':
+    main()

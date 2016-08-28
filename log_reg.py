@@ -1,13 +1,10 @@
 import numpy as np
-import random
 import theano
 import theano.tensor as T
-from get_data import get_data
-from get_data import display_img
 
 
 class LogisticRegression(object):
-    def __init__(self, train_x, train_y, test_x, test_y, valid_x, valid_y, n_in, n_out):
+    def __init__(self, n_in, n_out):
         self.W = theano.shared(
             value=np.zeros(
                 (n_in, n_out),
@@ -25,12 +22,6 @@ class LogisticRegression(object):
             borrow=True,
         )
         self.params = [self.W, self.b]
-        self.train_x = train_x
-        self.train_y = train_y
-        self.test_x = test_x
-        self.test_y = test_y
-        self.valid_x = valid_x
-        self.valid_y = valid_y
 
     def p_y_given_x(self, in_vect):
         return T.nnet.softmax(T.dot(in_vect, self.W) + self.b)
@@ -60,10 +51,13 @@ class LogisticRegression(object):
             equalities = T.neq(y, y_pred)
             return T.mean(equalities)
 
-    def train(self, x, y, alpha=0.13, batch_size=50, n_epochs=1000):
-        n_train_batches = self.train_x.get_value(borrow=True).shape[0] // batch_size
-        n_valid_batches = self.valid_x.get_value(borrow=True).shape[0] // batch_size
-        n_test_batches = self.test_x.get_value(borrow=True).shape[0] // batch_size
+    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=50, n_epochs=1000):
+        x = T.matrix('x')
+        y = T.ivector('y')
+
+        n_train_batches = train_x.get_value(borrow=True).shape[0] // batch_size
+        n_valid_batches = valid_x.get_value(borrow=True).shape[0] // batch_size
+        n_test_batches = test_x.get_value(borrow=True).shape[0] // batch_size
 
         index = T.lscalar()
 
@@ -71,8 +65,8 @@ class LogisticRegression(object):
             inputs=[index],
             outputs=self.errors(x, y),
             givens={
-                x: self.test_x[index * batch_size:(index+1)*batch_size],
-                y: self.test_y[index * batch_size:(index+1)*batch_size],
+                x: test_x[index * batch_size:(index+1)*batch_size],
+                y: test_y[index * batch_size:(index+1)*batch_size],
             }
         )
 
@@ -80,8 +74,8 @@ class LogisticRegression(object):
             inputs=[index],
             outputs=self.errors(x, y),
             givens={
-                x: self.valid_x[index * batch_size:(index+1)*batch_size],
-                y: self.valid_y[index * batch_size:(index+1)*batch_size],
+                x: valid_x[index * batch_size:(index+1)*batch_size],
+                y: valid_y[index * batch_size:(index+1)*batch_size],
             }
         )
 
@@ -99,8 +93,8 @@ class LogisticRegression(object):
             outputs=cost,
             updates=updates,
             givens={
-                x: self.train_x[index * batch_size:(index + 1) * batch_size],
-                y: self.train_y[index * batch_size:(index + 1) * batch_size],
+                x: train_x[index * batch_size:(index + 1) * batch_size],
+                y: train_y[index * batch_size:(index + 1) * batch_size],
             }
         )
 
@@ -118,45 +112,3 @@ class LogisticRegression(object):
                     avg_test_loss = np.mean(test_losses)
                     print('epoch {} -> test error: {}'.format(epoch+1, avg_test_loss))
 
-
-def get_xy(dataset):
-    x = theano.shared(
-        value=np.asarray([x[0] for x in dataset], dtype=theano.config.floatX),
-        borrow=True,
-    )
-    y = T.cast(theano.shared(
-        value=np.asarray([x[1] for x in dataset], dtype=theano.config.floatX),
-        borrow=True,
-    ), 'int32')
-    return x, y
-
-
-def main():
-    data = []
-    for i in range(10):
-        data.extend([(d, i) for d in get_data(i)])
-    random.seed(1234)
-    random.shuffle(data)
-
-    training = data[:800]
-    test = data[800:900]
-    validation = data[900:]
-
-    train_x, train_y = get_xy(training)
-    test_x, test_y = get_xy(test)
-    valid_x, valid_y = get_xy(validation)
-
-    classifier = LogisticRegression(train_x, train_y, test_x, test_y, valid_x, valid_y, n_in=28*28, n_out=10)
-    x = T.matrix('x')
-    y = T.ivector('y')
-    classifier.train(x, y)
-    for img, label in random.sample(data, 20):
-        img = np.asarray(img, dtype=theano.config.floatX)
-        pred_label = classifier.pred_label(img)
-        print("I think this is a {}.".format(pred_label))
-        print("it is actually a {}.".format(label))
-        display_img(img)
-
-
-if __name__ == '__main__':
-    main()
