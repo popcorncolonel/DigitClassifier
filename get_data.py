@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import theano
 
 
 def get_data(num: int) -> list:
@@ -13,7 +14,7 @@ def get_data(num: int) -> list:
             for i in range(28*28):
                 byte = f.read(1)
                 img.append(byte[0])
-            images.append(np.asarray(img))
+            images.append(img)
     return images
 
 

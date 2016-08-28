@@ -22,20 +22,9 @@ class Classifier(object):
         :param img: 28*28 dimensional np array representing an image
         :return: 0-9
         """
-        vects = [  # yes i know this is I_10
-            np.asarray([1, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-            np.asarray([0, 1, 0, 0, 0, 0, 0, 0, 0, 0]),
-            np.asarray([0, 0, 1, 0, 0, 0, 0, 0, 0, 0]),
-            np.asarray([0, 0, 0, 1, 0, 0, 0, 0, 0, 0]),
-            np.asarray([0, 0, 0, 0, 1, 0, 0, 0, 0, 0]),
-            np.asarray([0, 0, 0, 0, 0, 1, 0, 0, 0, 0]),
-            np.asarray([0, 0, 0, 0, 0, 0, 1, 0, 0, 0]),
-            np.asarray([0, 0, 0, 0, 0, 0, 0, 1, 0, 0]),
-            np.asarray([0, 0, 0, 0, 0, 0, 0, 0, 1, 0]),
-            np.asarray([0, 0, 0, 0, 0, 0, 0, 0, 0, 1]),
-        ]
+        I = np.identity(10)
         prediction = self.forward_pass(img)
-        dists = [np.linalg.norm(vect - prediction) for vect in vects]
+        dists = [np.linalg.norm(vect - prediction) for vect in I]
         return np.argmin(dists)
 
     def forward_pass(self, img):
