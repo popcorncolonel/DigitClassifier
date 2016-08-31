@@ -51,7 +51,7 @@ class LogisticRegression(object):
             equalities = T.neq(y, y_pred)
             return T.mean(equalities)
 
-    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=50, n_epochs=1000):
+    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=500, n_epochs=1000):
         x = T.matrix('x')
         y = T.ivector('y')
 
@@ -105,7 +105,7 @@ class LogisticRegression(object):
             if epoch % n_train_batches == 0:
                 validation_losses = [validate_model(i) for i in range(n_valid_batches)]
                 avg_validation_loss = np.mean(validation_losses)
-                print('epoch {} -> validation error: {}'.format(epoch+1, avg_validation_loss))
+                print('epoch {} -> validation error: {} (best loss={})'.format(epoch+1, avg_validation_loss, best_loss))
                 if avg_validation_loss < best_loss:
                     best_loss = avg_validation_loss
                     test_losses = [test_model(i) for i in range(n_test_batches)]

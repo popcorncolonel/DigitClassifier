@@ -14,9 +14,9 @@ def main():
         data.extend([(d, i) for d in get_data(i)])
     random.shuffle(data)
 
-    training = data[:800]
-    test = data[800:900]
-    validation = data[900:]
+    training = data[:8000]
+    test = data[8000:9000]
+    validation = data[9000:]
 
     train_x, train_y = get_xy(training)
     test_x, test_y = get_xy(test)
