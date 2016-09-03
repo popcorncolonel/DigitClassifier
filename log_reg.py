@@ -2,8 +2,10 @@ import numpy as np
 import theano
 import theano.tensor as T
 
+from classifier import Classifier
 
-class LogisticRegression(object):
+
+class LogisticRegression(Classifier):
     def __init__(self, n_in, n_out):
         self.W = theano.shared(
             value=np.zeros(
