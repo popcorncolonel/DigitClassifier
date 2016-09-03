@@ -5,11 +5,12 @@ import theano
 from get_data import get_data
 from get_data import display_img
 from get_data import get_xy
-from log_reg import LogisticRegression
+from mlp import MLP
 
 
 def main():
     data = []
+    random.seed(1234)
     for i in range(10):
         data.extend([(d, i) for d in get_data(i)])
     random.shuffle(data)
@@ -22,7 +23,7 @@ def main():
     test_x, test_y = get_xy(test)
     valid_x, valid_y = get_xy(validation)
 
-    classifier = LogisticRegression(n_in=28*28, n_out=10)
+    classifier = MLP(n_in=28*28, n_hidden=500, n_out=10, rng=np.random.RandomState(1234))
     classifier.train(train_x, train_y, test_x, test_y, valid_x, valid_y)
 
     for img, label in random.sample(data, 20):
