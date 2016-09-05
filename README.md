@@ -1,0 +1,3 @@
+# DigitClassifier
+
+python classify.py
