@@ -3,6 +3,7 @@ import random
 import theano
 import theano.tensor as T
 
+
 class Classifier(object):
     def errors(self, x, y):
         raise NotImplementedError

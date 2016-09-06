@@ -59,19 +59,16 @@ class MLP(Classifier):
         hidden_output = self.hidden.output(x)
         return self.log_reg.pred_label(hidden_output)
 
-    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=500):
+    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.10, batch_size=200, lambda_1=0.00, lambda_2=0.001):
         x = T.matrix('x')
         y = T.ivector('y')
 
-        lambda_1 = 1
-        lambda_2 = 1
         cost = (
             self.negative_log_likelihood(x, y) +
             lambda_1 * self.l1_norm +
             lambda_2 * self.l2_norm_square
         )
         index = T.lscalar()
-        # TODO: actually output the %error
 
         grads = [T.grad(cost, param) for param in self.params]
         updates = [(param, param - alpha*grad) for param, grad in zip(self.params, grads)]
@@ -84,5 +81,5 @@ class MLP(Classifier):
                 y: train_y[index*batch_size:(index+1)*batch_size],
             }
         )
-        self.run_batches(train_x, train_y, test_x, test_y, valid_x, valid_y, x, y, train_model)
+        self.run_batches(train_x, train_y, test_x, test_y, valid_x, valid_y, x, y, train_model, batch_size=batch_size)
 
