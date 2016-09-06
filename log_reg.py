@@ -54,6 +54,7 @@ class LogisticRegression(Classifier):
             return T.mean(equalities)
 
     def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=500, l1_reg=0., l2_reg=0.):
+        batch_size = int(batch_size)
         n_epochs = 1000
 
         x = T.matrix('x')

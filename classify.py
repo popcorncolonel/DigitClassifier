@@ -28,14 +28,15 @@ def optimize_hyperparam(classifier, hyperparam_name, possible_range=(-999, 999))
     diff = possible_range[1] - possible_range[0]
     val = possible_range[0]
     possible_vals = []
-    num_to_try = 10.
+    num_to_try = 10.0
 
-    for _ in range(num_to_try):
+    for _ in range(int(num_to_try)):
         possible_vals.append(val)
         val += diff / num_to_try
 
     possible_vals.append(val)
     for val in possible_vals:
+        print('Training with {name} as val... {val}'.format(name=hyperparam_name, val=best_val, error=best_error))
         error = classifier.train(train_x, train_y, test_x, test_y, valid_x, valid_y, **{hyperparam_name: val})
         if error < best_error:
             best_error = error

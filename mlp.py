@@ -60,6 +60,8 @@ class MLP(Classifier):
         return self.log_reg.pred_label(hidden_output)
 
     def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=500, l1_reg=0.00, l2_reg=0.001):
+        batch_size = int(batch_size)
+
         x = T.matrix('x')
         y = T.ivector('y')
 
