@@ -45,7 +45,7 @@ class Classifier(object):
             if epoch % 5 == 0:
                 validation_losses = [validate_model(i) for i in range(n_valid_batches)]
                 avg_validation_loss = np.mean(validation_losses)
-                print('epoch {} -> validation error: {} (best loss={})'.format(epoch+1, avg_validation_loss, best_loss))
+                print('epoch {} -> validation error: {} (best loss={})'.format(epoch, avg_validation_loss, best_loss))
                 if avg_validation_loss < best_loss:
                     best_loss = avg_validation_loss
                     test_losses = [test_model(i) for i in range(n_test_batches)]

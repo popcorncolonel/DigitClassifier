@@ -53,7 +53,7 @@ class MLP(Classifier):
 
     def errors(self, x, y):
         hidden_output = self.hidden.output(x)
-        return self.log_reg.negative_log_likelihood(hidden_output, y)
+        return self.log_reg.errors(hidden_output, y)
 
     def pred_label(self, x):
         hidden_output = self.hidden.output(x)
@@ -71,6 +71,7 @@ class MLP(Classifier):
             lambda_2 * self.l2_norm_square
         )
         index = T.lscalar()
+        # TODO: actually output the %error
 
         grads = [T.grad(cost, param) for param in self.params]
         updates = [(param, param - alpha*grad) for param, grad in zip(self.params, grads)]
