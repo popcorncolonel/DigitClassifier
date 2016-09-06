@@ -59,14 +59,14 @@ class MLP(Classifier):
         hidden_output = self.hidden.output(x)
         return self.log_reg.pred_label(hidden_output)
 
-    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=500, lambda_1=0.00, lambda_2=0.001):
+    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=500, l1_reg=0.00, l2_reg=0.001):
         x = T.matrix('x')
         y = T.ivector('y')
 
         cost = (
             self.negative_log_likelihood(x, y) +
-            lambda_1 * self.l1_norm +
-            lambda_2 * self.l2_norm_square
+            l1_reg * self.l1_norm +
+            l2_reg * self.l2_norm_square
         )
         index = T.lscalar()
 
