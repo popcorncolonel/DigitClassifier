@@ -59,7 +59,7 @@ class MLP(Classifier):
         hidden_output = self.hidden.output(x)
         return self.log_reg.pred_label(hidden_output)
 
-    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.10, batch_size=200, lambda_1=0.00, lambda_2=0.001):
+    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=500, lambda_1=0.00, lambda_2=0.001):
         x = T.matrix('x')
         y = T.ivector('y')
 
@@ -81,5 +81,6 @@ class MLP(Classifier):
                 y: train_y[index*batch_size:(index+1)*batch_size],
             }
         )
-        self.run_batches(train_x, train_y, test_x, test_y, valid_x, valid_y, x, y, train_model, batch_size=batch_size)
+        best_loss = self.run_batches(train_x, train_y, test_x, test_y, valid_x, valid_y, x, y, train_model, batch_size=batch_size)
+        return best_loss
 
