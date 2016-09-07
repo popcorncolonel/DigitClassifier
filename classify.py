@@ -46,8 +46,21 @@ def main():
     best_l1 = 0.000
     best_l2 = 0.001
     best_batch_size = 600
+    n_epochs = 10000
 
-    classifier.train(train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=best_alpha, l1_reg=best_l1, l2_reg=best_l2, batch_size=best_batch_size)
+    classifier.train(
+        train_x,
+        train_y,
+        test_x,
+        test_y,
+        valid_x,
+        valid_y,
+        alpha=best_alpha,
+        l1_reg=best_l1,
+        l2_reg=best_l2,
+        batch_size=best_batch_size,
+        n_epochs=n_epochs
+    )
 
     print('best hyperparams: {}'.format({
         'alpha': best_alpha,
@@ -55,12 +68,6 @@ def main():
         'l2': best_l2,
         'batch_size': best_batch_size,
     }))
-    return
-    for img, label in random.sample(data, 20):
-            img = np.asarray(img, dtype=theano.config.floatX)
-            pred_label = classifier.pred_label(img)
-            print("Guessed: {}; Actually: {}".format(pred_label, label))
-            display_img(img)
 
 
 if __name__ == '__main__':

@@ -11,7 +11,7 @@ class Classifier(object):
     def pred_label(self, x):
         raise NotImplementedError
 
-    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=500, l1_reg=0., l2_reg=0.):
+    def train(self, train_x, train_y, test_x, test_y, valid_x, valid_y, alpha=0.13, batch_size=500, l1_reg=0., l2_reg=0., n_epochs=1000):
         raise NotImplementedError
 
     def run_batches(self, train_x, train_y, test_x, test_y, valid_x, valid_y, x, y, train_model_func, batch_size=500, n_epochs=1000):
