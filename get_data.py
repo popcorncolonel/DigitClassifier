@@ -1,22 +1,15 @@
-import numpy as np
+import gzip
 import matplotlib.pyplot as plt
+import numpy as np
+import pickle
 import theano
 import theano.tensor as T
 
 
-def get_data(num: int) -> list:
-    """
-    Returns a list of examples of images
-    """
-    images = []
-    with open('data/data' + str(num), 'rb') as f:
-        for _ in range(1000):
-            img = []
-            for i in range(28*28):
-                byte = f.read(1)
-                img.append(byte[0])
-            images.append(img)
-    return images
+def get_data():
+    with gzip.open('mnist.pkl.gz', 'rb') as f:
+        train_set, valid_set, test_set = pickle.load(f, encoding='latin1')
+    return train_set, valid_set, test_set
 
 
 def display_img(arr: np.array):
@@ -25,13 +18,13 @@ def display_img(arr: np.array):
     plt.show()
 
 
-def get_xy(dataset):
+def get_xy(imgs, labels):
     x = theano.shared(
-        value=np.asarray([x[0] for x in dataset], dtype=theano.config.floatX),
+        value=np.asarray(imgs, dtype=theano.config.floatX),
         borrow=True,
     )
     y = T.cast(theano.shared(
-        value=np.asarray([x[1] for x in dataset], dtype=theano.config.floatX),
+        value=np.asarray(labels, dtype=theano.config.floatX),
         borrow=True,
     ), 'int32')
     return x, y
