@@ -115,4 +115,5 @@ class LogisticRegression(Classifier):
                     test_losses = [test_model(i) for i in range(n_test_batches)]
                     avg_test_loss = np.mean(test_losses)
                     print('epoch {} -> test error: {}'.format(epoch+1, avg_test_loss))
+        return best_loss
 

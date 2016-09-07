@@ -84,5 +84,7 @@ class MLP(Classifier):
                 y: train_y[index*batch_size:(index+1)*batch_size],
             }
         )
-        self.run_batches(train_x, train_y, test_x, test_y, valid_x, valid_y, x, y, train_model)
+        best_loss = self.run_batches(train_x, train_y, test_x, test_y, valid_x, valid_y, x, y, train_model)
+        return best_loss
+
 
