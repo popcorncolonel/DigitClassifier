@@ -46,7 +46,7 @@ def main():
     best_l1 = 0.000
     best_l2 = 0.001
     best_batch_size = 600
-    n_epochs = 10000
+    n_epochs = 1000
 
     classifier.train(
         train_x,
