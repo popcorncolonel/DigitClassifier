@@ -8,7 +8,9 @@ from get_data import get_xy
 from mlp import MLP
 
 random.seed(1234)
+print('loading data...')
 training, valid, test = get_data()
+print('loaded.')
 
 train_x, train_y = get_xy(training[0], training[1])
 test_x, test_y = get_xy(test[0], test[1])
@@ -48,6 +50,7 @@ def main():
     best_batch_size = 600
     n_epochs = 1000
 
+    print("training")
     classifier.train(
         train_x,
         train_y,
@@ -61,13 +64,6 @@ def main():
         batch_size=best_batch_size,
         n_epochs=n_epochs
     )
-
-    print('best hyperparams: {}'.format({
-        'alpha': best_alpha,
-        'l1': best_l1,
-        'l2': best_l2,
-        'batch_size': best_batch_size,
-    }))
 
 
 if __name__ == '__main__':
