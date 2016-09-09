@@ -47,7 +47,7 @@ def main():
     best_alpha = 0.0806
     best_l1 = 0.000
     best_l2 = 0.001
-    best_batch_size = 600
+    best_batch_size = 1000
     n_epochs = 1000
 
     print("training")

@@ -10,8 +10,8 @@ class HiddenLayer(object):
         self.W = theano.shared(
             value=np.asarray(
                 rng.uniform(
-                    low=-np.sqrt(6 / (n_in+n_out)),
-                    high=np.sqrt(6 / (n_in+n_out)),
+                    low=-np.sqrt(6.0 / (n_in+n_out)),
+                    high=np.sqrt(6.0 / (n_in+n_out)),
                     size=(n_in, n_out),
                 ),
                 dtype=theano.config.floatX,
