@@ -1,11 +1,12 @@
 import numpy as np
 import random
-import theano
+import timeit
 
 from get_data import get_data
 from get_data import display_img
 from get_data import get_xy
 from mlp import MLP
+from cnn import ConvolutionalNeuralNetwork
 
 random.seed(1234)
 print('loading data...')
@@ -43,14 +44,22 @@ def optimize_hyperparam(classifier, hyperparam_name, possible_range=(-999, 999),
 
 
 def main():
-    classifier = MLP(n_in=28*28, n_hidden=500, n_out=10, rng=np.random.RandomState(1234))
     best_alpha = 0.02
     best_l1 = 0.000
     best_l2 = 0.001
     best_batch_size = 200
     n_epochs = 1000
 
+    rng = np.random.RandomState(1234)
+    #classifier = MLP(n_in=28*28, n_hidden=500, n_out=10, rng=rng)
+    classifier = ConvolutionalNeuralNetwork(
+        rng=rng,
+        batch_size=best_batch_size,
+        nkerns=(20, 50),
+    )
+
     print("training")
+    start_time = timeit.default_timer()
     classifier.train(
         train_x,
         train_y,
@@ -64,6 +73,8 @@ def main():
         batch_size=best_batch_size,
         n_epochs=n_epochs
     )
+    end_time = timeit.default_timer()
+    print('Trained for %.1fs' % (end_time - start_time))
 
 
 if __name__ == '__main__':
