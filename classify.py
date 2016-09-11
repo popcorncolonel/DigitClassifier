@@ -44,10 +44,10 @@ def optimize_hyperparam(classifier, hyperparam_name, possible_range=(-999, 999),
 
 def main():
     classifier = MLP(n_in=28*28, n_hidden=500, n_out=10, rng=np.random.RandomState(1234))
-    best_alpha = 0.0806
+    best_alpha = 0.02
     best_l1 = 0.000
     best_l2 = 0.001
-    best_batch_size = 1000
+    best_batch_size = 200
     n_epochs = 1000
 
     print("training")
