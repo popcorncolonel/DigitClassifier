@@ -1,5 +1,5 @@
 import numpy as np
-import random
+import pickle
 import theano
 import theano.tensor as T
 
@@ -50,6 +50,8 @@ class Classifier(object):
                     best_loss = avg_validation_loss
                     test_losses = [test_model(i) for i in range(n_test_batches)]
                     avg_test_loss = np.mean(test_losses)
-                    print('test error: {}'.format(epoch, avg_test_loss))
+                    print('test error: {}'.format(avg_test_loss))
+                    with open('best_model.pkl', 'w') as f:
+                        pickle.dump(self, f)
                 print('epoch {} -> validation error: {} (best loss={})'.format(epoch, avg_validation_loss, best_loss))
         return best_loss

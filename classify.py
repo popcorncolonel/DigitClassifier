@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 import random
 import timeit
 
@@ -75,6 +76,20 @@ def main():
     )
     end_time = timeit.default_timer()
     print('Trained for %.1fs' % (end_time - start_time))
+
+    with open('best_model.pkl', 'rb') as f:
+        best_model = pickle.load(f)
+    n_correct = 0
+    n_wrong = 0
+    for img, label in zip(test_x, test_y):
+        predicted = best_model.pred_label(img)
+        if predicted != label:
+            print('guessed {} but was actually {}'.format(predicted, label))
+            display_img(img)
+            n_wrong += 1
+        else:
+            n_correct += 1
+    print("{} correct, {} incorrect".format(n_correct, n_wrong))
 
 
 if __name__ == '__main__':
