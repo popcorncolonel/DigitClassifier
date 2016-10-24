@@ -94,6 +94,7 @@ class ConvolutionalNeuralNetwork(Classifier):
 
     def pred_label(self, x):
         output = self.pre_logreg_output(x)
+        output = output.flatten(1)
         return self.layer3.pred_label(output)
 
     def errors(self, x, y):

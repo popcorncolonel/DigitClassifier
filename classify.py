@@ -18,7 +18,6 @@ train_x, train_y = get_xy(training[0], training[1])
 test_x, test_y = get_xy(test[0], test[1])
 valid_x, valid_y = get_xy(valid[0], valid[1])
 
-
 def optimize_hyperparam(classifier, hyperparam_name, possible_range=(-999, 999), **kwargs):
     best_val = possible_range[0]
     best_error = float('inf')
@@ -32,6 +31,7 @@ def optimize_hyperparam(classifier, hyperparam_name, possible_range=(-999, 999),
         val += diff / num_to_try
 
     possible_vals.append(val)
+    
     kwargs.update({hyperparam_name: val})
     for val in possible_vals:
         print('Training with {name} as val... {val}'.format(name=hyperparam_name, val=val))
@@ -52,6 +52,7 @@ def main():
     n_epochs = 1000
 
     rng = np.random.RandomState(1234)
+    """
     #classifier = MLP(n_in=28*28, n_hidden=500, n_out=10, rng=rng)
     classifier = ConvolutionalNeuralNetwork(
         rng=rng,
@@ -76,18 +77,22 @@ def main():
     )
     end_time = timeit.default_timer()
     print('Trained for %.1fs' % (end_time - start_time))
+    """
 
-    with open('best_model.pkl', 'rb') as f:
+    with open('best_model.pkl', 'r') as f:
         best_model = pickle.load(f)
     n_correct = 0
     n_wrong = 0
-    for img, label in zip(test_x, test_y):
+    best_model.batch_size = 1
+    for img, label in zip(test[0], test[1]):
+        img = np.asarray(img)
         predicted = best_model.pred_label(img)
         if predicted != label:
             print('guessed {} but was actually {}'.format(predicted, label))
-            display_img(img)
+            #display_img(img)
             n_wrong += 1
         else:
+            print('correctly guessed {}'.format(predicted))
             n_correct += 1
     print("{} correct, {} incorrect".format(n_correct, n_wrong))
 
