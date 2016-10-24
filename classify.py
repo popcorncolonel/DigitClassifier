@@ -44,7 +44,7 @@ def optimize_hyperparam(classifier, hyperparam_name, possible_range=(-999, 999),
     return best_val, best_error
 
 
-def main():
+def main(argv):
     best_alpha = 0.02
     best_l1 = 0.000
     best_l2 = 0.001
@@ -52,32 +52,31 @@ def main():
     n_epochs = 1000
 
     rng = np.random.RandomState(1234)
-    """
     #classifier = MLP(n_in=28*28, n_hidden=500, n_out=10, rng=rng)
-    classifier = ConvolutionalNeuralNetwork(
-        rng=rng,
-        batch_size=best_batch_size,
-        nkerns=(20, 50),
-    )
+    if '--eval' not in argv:
+        classifier = ConvolutionalNeuralNetwork(
+            rng=rng,
+            batch_size=best_batch_size,
+            nkerns=(20, 50),
+        )
 
-    print("training")
-    start_time = timeit.default_timer()
-    classifier.train(
-        train_x,
-        train_y,
-        test_x,
-        test_y,
-        valid_x,
-        valid_y,
-        alpha=best_alpha,
-        l1_reg=best_l1,
-        l2_reg=best_l2,
-        batch_size=best_batch_size,
-        n_epochs=n_epochs
-    )
-    end_time = timeit.default_timer()
-    print('Trained for %.1fs' % (end_time - start_time))
-    """
+        print("training")
+        start_time = timeit.default_timer()
+        classifier.train(
+            train_x,
+            train_y,
+            test_x,
+            test_y,
+            valid_x,
+            valid_y,
+            alpha=best_alpha,
+            l1_reg=best_l1,
+            l2_reg=best_l2,
+            batch_size=best_batch_size,
+            n_epochs=n_epochs
+        )
+        end_time = timeit.default_timer()
+        print('Trained for %.1fs' % (end_time - start_time))
 
     with open('best_model.pkl', 'r') as f:
         best_model = pickle.load(f)
@@ -88,14 +87,15 @@ def main():
         img = np.asarray(img)
         predicted = best_model.pred_label(img)
         if predicted != label:
-            print('guessed {} but was actually {}'.format(predicted, label))
+            #print('guessed {} but was actually {}'.format(predicted, label))
             #display_img(img)
             n_wrong += 1
         else:
-            print('correctly guessed {}'.format(predicted))
+            #print('correctly guessed {}'.format(predicted))
             n_correct += 1
     print("{} correct, {} incorrect".format(n_correct, n_wrong))
 
 
 if __name__ == '__main__':
-    main()
+    import sys
+    main(sys.argv)
